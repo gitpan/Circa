@@ -4,6 +4,12 @@ package Circa::Parser;
 # Copyright 2000 A.Barbet alian@alianwebserver.com.  All rights reserved.
 
 # $Log: Parser.pm,v $
+# Revision 1.10  2001/08/05 20:21:06  alian
+# - Correct a bug in parse_new
+#
+# Revision 1.9  2001/08/01 19:42:58  alian
+# - Add a \Q \E in a regular expression (ex ++ in url)
+#
 # Revision 1.8  2001/05/28 22:32:02  alian
 # - Move load to HTML::Parser to new method. If not found, use a basic parser. (without link)
 #
@@ -45,7 +51,7 @@ require Exporter;
 
 @ISA = qw(Exporter);
 @EXPORT = qw();
-$VERSION = ('$Revision: 1.8 $ ' =~ /(\d+\.\d+)/)[0];
+$VERSION = ('$Revision: 1.10 $ ' =~ /(\d+\.\d+)/)[0];
 
 # Mot à ne pas indexer
 my %bad = map {$_ => 1} qw (
@@ -254,7 +260,7 @@ sub look_at
                        "relation (mot,id_site,facteur) ".
                        "values ('$mot',$idc,$nb)";
         if ($nb >=$this->{'ConfigMoteur'}{'nb_min_mots'}) 
-          {$this->{DBH}->do($requete);$nbwg++;}
+          {$this->{INDEXER}->dbh->do($requete);$nbwg++;}
         }
       my $nbw=keys %$l;undef(%$l);
       # On n'indexe pas les liens si on est au niveau max
@@ -309,11 +315,11 @@ sub set_agent
   
   if (($self->{ConfigMoteur}->{'temporate'}) && (!$locale))
     {
-      $self->{AGENT} = new LWP::RobotUA('CircaIndexer / $Revision: 1.8 $', 
+      $self->{AGENT} = new LWP::RobotUA('CircaIndexer / $Revision: 1.10 $', 
                                        $self->{ConfigMoteur}->{'author'});
       $self->{AGENT}->delay(10/60.0);
     }
-  else {$self->{AGENT} = new LWP::UserAgent 'CircaIndexer / $Revision: 1.8 $', $self->{ConfigMoteur}->{'author'};}
+  else {$self->{AGENT} = new LWP::UserAgent 'CircaIndexer / $Revision: 1.10 $', $self->{ConfigMoteur}->{'author'};}
   if ($self->{PROXY}) {$self->{AGENT}->proxy(['http', 'ftp'], $self->{PROXY});}
   $self->{AGENT}->max_size($self->{INDEXER}->size_max) 
     if ($self->{INDEXER}->size_max);
@@ -353,7 +359,7 @@ sub check_links
     my $bad = qr/\.(doc|zip|ps|gif|jpg|gz|pdf|eps|png|deb|xls|ppt|
 		    class|GIF|css|js|wav|mid)$/i;
     if (($tag) && ($links) && ($tag eq 'a') 
-	&& ($links=~/$host/) 
+	&& ($links=~/\Q$host\E/) 
 	&& ($links !~ $bad))
     {
       if ($links=~/^(.*?)#/) {$links=$1;} # Don't add anchor
@@ -386,7 +392,7 @@ for index each document. Main method is C<look_at>.
 
 =head1 VERSION
 
-$Revision: 1.8 $
+$Revision: 1.10 $
 
 =head1 Public Class Interface
 

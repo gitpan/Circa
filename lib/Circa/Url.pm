@@ -4,6 +4,9 @@ package Circa::Url;
 # Copyright 2000 A.Barbet alian@alianwebserver.com.  All rights reserved.
 
 # $Log: Url.pm,v $
+# Revision 1.9  2001/08/01 19:41:44  alian
+# - Remove 2 warnings in update method
+#
 # Revision 1.8  2001/05/22 10:24:55  alian
 # - Update for new architecture
 #
@@ -40,7 +43,7 @@ require Exporter;
 
 @ISA = qw(Exporter);
 @EXPORT = qw();
-$VERSION = ('$Revision: 1.8 $ ' =~ /(\d+\.\d+)/)[0];
+$VERSION = ('$Revision: 1.9 $ ' =~ /(\d+\.\d+)/)[0];
 
 
 #------------------------------------------------------------------------------
@@ -93,8 +96,8 @@ sub add
 sub update
   {
   my ($self,$compte,%url)=@_;
-  $url{'titre'}=~s/'/\\'/g;
-  $url{'description'}=~s/'/\\'/g;
+  $url{'titre'}=~s/'/\\'/g if ($url{'titre'});
+  $url{'description'}=~s/'/\\'/g if ($url{'description'});
   my $requete =
     "update ".$self->{INDEXER}->pre_tbl.$compte."links set ";
   $requete.= "url              = '$url{url}',"         if ($url{url});
@@ -310,7 +313,7 @@ Circa::Url - provide functions to manage url of Circa
 
 =head1 VERSION
 
-$Revision: 1.8 $
+$Revision: 1.9 $
 
 =head1 SYNOPSIS
 
@@ -396,7 +399,7 @@ Does Circa already known this url ?
 
 =item new($indexer_instance)
 
-Create a new Circa::Categorie object with indexer instance properties
+Create a new Circa::Url object with indexer instance properties
 
 =item add($idMan,%url)
 

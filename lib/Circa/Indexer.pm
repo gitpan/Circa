@@ -4,6 +4,10 @@ package Circa::Indexer;
 # Copyright 2000 A.Barbet alian@alianwebserver.com.  All rights reserved.
 
 # $Log: Indexer.pm,v $
+# Revision 1.21  2001/08/01 19:41:11  alian
+# - Add return code for method connect : now you'll see if Indexer can connect
+# or not
+#
 # Revision 1.20  2001/05/28 18:41:18  alian
 # - Move Parser method from Circa.pm to Indexer.pm
 #
@@ -47,7 +51,7 @@ require Exporter;
 
 @ISA = qw(Exporter Circa);
 @EXPORT = qw();
-$VERSION = ('$Revision: 1.20 $ ' =~ /(\d+\.\d+)/)[0];
+$VERSION = ('$Revision: 1.21 $ ' =~ /(\d+\.\d+)/)[0];
 
 ########## CONFIG  ##########
 my %ConfigMoteurDefault=(
@@ -90,8 +94,8 @@ sub new
 sub connect 
   { 
     my $self=shift;
-    $self->SUPER::connect(@_);
     $self->{PARSER} = Circa::Parser->new($self);
+    return $self->SUPER::connect(@_);
   }
 
 #------------------------------------------------------------------------------
@@ -909,7 +913,7 @@ grow to one. So if < to $Config{'niveau_max'}, url is added.
 
 =head1 VERSION
 
-$Revision: 1.20 $
+$Revision: 1.21 $
 
 =head1 Class Interface
 
