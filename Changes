@@ -1,0 +1,8 @@
+Revision history for Perl extension Circa.
+
+Circa is a merge between Circa::Indexer and Circa::Search.
+Before this release, last release of Circa::Indexer is 1.8 and 
+Circa::Search is 1.5 (In this release, version is 1.20 and 1.11)
+
+So I use some common code in Circa.pm, split other code in Url.pm, 
+Categorie.pm and Parser.pm

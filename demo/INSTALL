@@ -1,0 +1,30 @@
+Update this script:
+
+admin.pl                 : Command line interface to indexer
+search.pl                : Command line interface to searcher
+cgi-bin/admin_compte.cgi : CGI Interface for administrate one account
+cgi-bin/admin.cgi        : General CGI Interface for indexer
+cgi-bin/search.cgi       : CGI Interace to searcher
+
+And set this:
+
+my $user = "alian";  # set your database User
+my $pass = "";       # set your database password
+my $db    = "circa"; # set your database name
+
+For the CGI file, set too this:
+
+my $rep = "/home/alian/project/Circa/Indexer/demo/ecrans/";
+where your html admin files are
+
+Then, you can do:
+
+In command line:
+admin.pl +create +add=http://www.monsite.com +parse_new=1 +depth_max
+for index your first url.
+
+Then for make a search, you can do:
+search.pl +word='my word'
+
+With CGI: 
+Just run admin.cgi or search.cgi
